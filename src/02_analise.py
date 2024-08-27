@@ -201,6 +201,7 @@ sn.scatterplot(data=df,
                sizes=(5,300),
                hue='clusterBR',
                palette='viridis',
+               alpha=0.6,
 )
 
 texts = []
@@ -220,7 +221,7 @@ adjust_text(texts,
 
 plt.grid(True)
 plt.suptitle("Partidos: Cor vs Genero - Eleições 2024")
-plt.title("Maior a bolha, maior o tamanho do partido")
+plt.title("Maior a bolha, maior o tamanho do partido", fontdict={"size":9})
 plt.xlabel("Taxa de Mulheres")
 plt.ylabel("Taxa de Pessoas Pretas")
 
@@ -243,3 +244,5 @@ ab = AnnotationBbox(imagebox, (0.8, 0.43),
                     box_alignment=(0.5, 0.5))
 
 plt.gca().add_artist(ab)
+
+plt.savefig("../img/partidos_cor_raca_genero_clusterBR_size.png")
