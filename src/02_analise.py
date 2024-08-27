@@ -4,8 +4,8 @@ import pandas as pd
 import sqlalchemy
 import matplotlib.pyplot as plt
 import matplotlib.image as img
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import seaborn as sn
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from adjustText import adjust_text
 
 
