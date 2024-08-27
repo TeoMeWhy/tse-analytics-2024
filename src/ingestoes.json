@@ -1,0 +1,14 @@
+[
+    {
+        "table": "tb_candidaturas",
+        "path": "../data/consulta_cand_2024/consulta_cand_2024_BRASIL.csv"
+    },
+    {
+        "table": "tb_bens",
+        "path": "../data/bem_candidato_2024/bem_candidato_2024_BRASIL.csv"
+    },
+    {
+        "table": "tb_cassacoes",
+        "path": "../data/motivo_cassacao_2024/motivo_cassacao_2024_BRASIL.csv"
+    }
+]

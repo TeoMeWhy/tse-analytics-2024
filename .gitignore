@@ -1,0 +1,7 @@
+*.csv
+*.db
+*.pdf
+*.zip
+*.png
+*.jpeg
+.vscode
