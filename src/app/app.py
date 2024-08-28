@@ -3,11 +3,22 @@ import streamlit as st
 import pandas as pd
 import sqlalchemy
 
+import os
+
+
 from utils import make_scatter, make_clusters
 
-engine = sqlalchemy.create_engine("sqlite:///../../data/database.db")
+app_path = os.path.dirname(os.path.abspath(__file__))
+src_path = os.path.dirname(app_path)
+base_path = os.path.dirname(src_path)
+data_path = os.path.join(base_path, "data")
 
-with open("etl_partidos.sql", "r") as open_file:
+database_path = os.path.join(data_path, "database.db")
+engine = sqlalchemy.create_engine(f"sqlite:///{database_path}")
+
+
+query_path = os.path.join(app_path, "etl_partidos.sql")
+with open(query_path, "r") as open_file:
     query = open_file.read()
 
 df = pd.read_sql(query, engine)
