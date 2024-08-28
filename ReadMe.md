@@ -24,8 +24,8 @@ Conheça mais sobre nosso projeto aqui:
 - Diversidade por gênero e cor/raça
     - [X] Agrupamento
     - [X] Separação por UF
-    - [ ] Separação por cargo
-    - [ ] Separação por UF/Cargo
+    - [X] Separação por cargo
+    - [X] Separação por UF/Cargo
     - [ ] Análise mulheres pretas
 
 - [ ] Análise faixa etária
