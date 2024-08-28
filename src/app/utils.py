@@ -56,7 +56,6 @@ def make_scatter(data, cluster=False, size=False):
     txCorRacaPreta = data['totalCorRacaPreta'].sum() / data['totalCandidaturas'].sum()
     txGenFeminino = data['totalGenFeminino'].sum() / data['totalCandidaturas'].sum()
 
-
     plt.hlines(y=txCorRacaPreta,
                xmin=data['txGenFeminino'].min(),
                xmax=data['txGenFeminino'].max(), colors='black', alpha=0.6, linestyles='--', label=f"Pessoas Pretas Geral: {100*txCorRacaPreta:.0f}%")
