@@ -14,8 +14,6 @@ src_path = os.path.dirname(app_path)
 base_path = os.path.dirname(src_path)
 data_path = os.path.join(base_path, "data")
 
-
-
 @st.cache_data(ttl=60*60*24)
 def create_df():
     filename = os.path.join(data_path, "data_partidos.parquet")
