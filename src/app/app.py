@@ -9,34 +9,21 @@ import gdown
 
 from utils import make_scatter, make_clusters
 
-
-
 app_path = os.path.dirname(os.path.abspath(__file__))
 src_path = os.path.dirname(app_path)
 base_path = os.path.dirname(src_path)
 data_path = os.path.join(base_path, "data")
 
-database_path = os.path.join(data_path, "database_gd.db")
-engine = sqlalchemy.create_engine(f"sqlite:///{database_path}")
-
-@st.cache_data(ttl=60*60*24)
-def downlaod_db():
-    url_databse = "https://drive.google.com/uc?export=download&id=1kr-kaHVEKEQ1XcQX5Cqx3WKd_lmzkzUy"
-    gdown.download(url_databse, database_path, quiet=False)
 
 
 @st.cache_data(ttl=60*60*24)
 def create_df():
-    query_path = os.path.join(app_path, "etl_partidos.sql")
-    with open(query_path, "r") as open_file:
-        query = open_file.read()
-
-    return pd.read_sql(query, engine)
+    filename = os.path.join(data_path, "data_partidos.parquet")
+    return pd.read_parquet(filename)
 
 
 # %%
 
-downlaod_db()
 df = create_df()
 
 welcome = """
