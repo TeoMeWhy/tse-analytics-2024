@@ -2,7 +2,7 @@
 
 Projeto com finalidade de apresentar dados referentes à candidaturas dos partidos para as eleições municipais brasileiras de 2024.
 
-Criamos um app no Streamlit que você [conferir aqui](https://tse-analytics.streamlit.app/).
+Criamos um app no Streamlit que você pode [conferir aqui](https://tse-analytics.streamlit.app/).
 
 ## Fonte dos dados
 
