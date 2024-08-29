@@ -20,6 +20,22 @@ def create_df():
     return pd.read_parquet(filename)
 
 
+features_map = {
+    "PERCENTUAL FEMININO": "txGenFeminino",
+    "PERCENTUAL RACA PRETA": "txCorRacaPreta",
+    "PERCENTUAL RACA PRETA PARDA": "txCorRacaPretaParda",
+    "PERCENTUAL RACA NÃO-BRANCA": "txCorRacaNaoBranca",
+    "MEDIA BENS TOTAL": "avgBens",
+    "MEDIA BENS SEM ZEROS": "avgBensNotZero",
+    "PERCENTUAL ESTADO CIVIL CASADO(A)": "txEstadoCivilCasado",
+    "PERCENTUAL ESTADO CIVIL SOLTEIRO(A)": "txEstadoCivilSolteiro",
+    "PERCENTUAL ESTADO CIVIL DIVORCIADO(A)": "txEstadoCivilSeparadoDivorciado",
+    "MÉDIA IDADE": "avgIdade",
+}
+
+features_options = list(features_map.keys())
+features_options.sort()
+
 # %%
 
 df = create_df()
@@ -48,17 +64,42 @@ cargos_options.sort()
 cargos_options.remove("GERAL")
 cargos_options = ["GERAL"] + cargos_options
 
+## Definição do estado e cargo
 col1, col2, = st.columns(2)
-
 with col1:
     estado = st.selectbox(label="Estado", placeholder="Selecione o estado para filtro", options=uf_options)
-    size = st.checkbox("Tamanho das bolhas")
-    cluster = st.checkbox("Definir cluster")
 
 with col2:
     cargo = st.selectbox(label="Cargo", placeholder="Selecione o cargo para filtro", options=cargos_options)
-    st.markdown("")
-    n_cluster = st.number_input("Quantidade de clusters", value=6, format="%d", max_value=10, min_value=1)
+
+
+## Definição dos eixeos
+col1, col2, = st.columns(2)
+with col1:
+    x_option = st.selectbox(label="Eixo x", options=features_options, index=6)
+    x = features_map[x_option]
+    new_features_options = features_options.copy()
+    new_features_options.remove(x_option)
+
+with col2:
+    y_option = st.selectbox(label="Eixo y", options=new_features_options, index=7)
+    y = features_map[y_option]
+
+size = st.checkbox("Tamanho das bolhas")
+
+# Definição do uso de cluster
+col1, col2, = st.columns(2)
+with col1:
+    cluster = st.checkbox("Definir cluster")
+    if cluster:
+        n_cluster = st.number_input("Quantidade de clusters", value=6, format="%d", max_value=10, min_value=1)
+
+with col2:
+    if cluster:
+        features_options_selected = st.multiselect(label="Variáveis para agrupamento",
+                                                   options=features_options,
+                                                   default=["PERCENTUAL FEMININO","PERCENTUAL RACA PRETA"])
+        features_selected = [features_map[i] for i in features_options_selected]
 
 
 data = df[(df['SG_UF']==estado) & (df['DS_CARGO']==cargo)].copy()
@@ -67,9 +108,13 @@ total_candidatos = int(data["totalCandidaturas"].sum())
 st.markdown(f"Total de candidaturas: {total_candidatos}")
 
 if cluster:
-    data = make_clusters(data, n_cluster)
+    data = make_clusters(data=data, features=features_selected, n=n_cluster)
 
-fig = make_scatter(data, cluster=cluster, size=size)
+fig = make_scatter(data,
+                   x=x, y=y,
+                   x_label=x_option, y_label=y_option,
+                   cluster=cluster,
+                   size=size)
 
 st.pyplot(fig)
 
