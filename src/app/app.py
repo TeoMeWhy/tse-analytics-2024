@@ -43,13 +43,7 @@ df = create_df()
 welcome = """
 # TSE Analytics - Eleições 2024
 
-Uma iniciativa [Téo Me Why](github.com/teomewhy) em conjunto com a comunidade de análise e ciência de dados ao vivo!
-
-Você pode conferir o repositório deste projeto aqui: [github.com/TeoMeWhy/tse-analytics-2024](https://github.com/TeoMeWhy/tse-analytics-2024).
-
-### Diversidade
-
-Como primeira análise dos partidos, focamos na representatividade de mulheres e pessoas pretas nas candidaturas.
+Altere as opções do botões abaixo para ver as mudanças no gráfico.
 """
 
 st.markdown(welcome)
@@ -118,3 +112,10 @@ fig = make_scatter(data,
 
 st.pyplot(fig)
 
+st.markdown("""
+### Créditos            
+
+Uma iniciativa [Téo Me Why](github.com/teomewhy) em conjunto com a comunidade de análise e ciência de dados ao vivo!
+
+Você pode conferir o repositório deste projeto aqui: [github.com/TeoMeWhy/tse-analytics-2024](https://github.com/TeoMeWhy/tse-analytics-2024).
+""")
