@@ -43,7 +43,7 @@ df = create_df()
 welcome = """
 # TSE Analytics - Eleições 2024
 
-Altere as opções do botões abaixo para ver as mudanças no gráfico.
+Altere as opções abaixo para ver as mudanças no gráfico.
 """
 
 st.markdown(welcome)
