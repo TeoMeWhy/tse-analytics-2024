@@ -37,8 +37,3 @@ with open(file_path, "wb") as open_file:
 # DBTITLE 1,UNZIP
 with zipfile.ZipFile(file_path, 'r') as zip_ref:
     zip_ref.extractall(folder_path)
-
-# COMMAND ----------
-
-df = spark.read.csv(f"{folder_path}/*BRASIL.csv", sep=";", header=True, encoding='latin1')
-df.display()
