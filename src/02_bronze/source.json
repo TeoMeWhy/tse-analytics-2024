@@ -1,0 +1,11 @@
+{
+  "bem_candidato": {
+    "partition": "ANO_ELEICAO"
+  },
+  "consulta_cand": {
+    "partition": "ANO_ELEICAO"
+  },
+  "rede_social_candidato": {
+    "partition": "AA_ELEICAO"
+  }
+}
