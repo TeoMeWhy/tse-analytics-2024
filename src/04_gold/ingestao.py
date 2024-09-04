@@ -5,10 +5,10 @@ def import_query(path):
 
 catalog = 'gold'
 database = 'tse'
-table = "profile_partidos"
-tablename = f"{catalog}.{database}.{table}"
+table = 'profile_partidos'
+tablename = f'{catalog}.{database}.{table}
 
-query = import_query(f"{table}.sql")
+query = import_query(f'{table}.sql')
 
 # COMMAND ----------
 
