@@ -1,13 +1,22 @@
 # %%
+import os
+
 import streamlit as st
 import pandas as pd
 import sqlalchemy
-
-import os
+import dotenv
 
 import gdown
 
 from utils import make_scatter, make_clusters
+
+dotenv.load_dotenv(".env")
+
+DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
+DATABRICKS_SERVER_HOSTNAME = os.getenv("DATABRICKS_SERVER_HOSTNAME")
+DATABRICKS_HTTP_PATH = os.getenv("DATABRICKS_HTTP_PATH")
+DATABRICKS_CATALOG = os.getenv("DATABRICKS_CATALOG")
+
 
 app_path = os.path.dirname(os.path.abspath(__file__))
 src_path = os.path.dirname(app_path)
@@ -16,8 +25,11 @@ data_path = os.path.join(base_path, "data")
 
 @st.cache_data(ttl=60*60*24)
 def create_df():
-    filename = os.path.join(data_path, "data_partidos.parquet")
-    return pd.read_parquet(filename)
+    url = f"databricks://token:{DATABRICKS_TOKEN}@{DATABRICKS_SERVER_HOSTNAME}?http_path={DATABRICKS_HTTP_PATH}&catalog={DATABRICKS_CATALOG}&schema=gold"
+    engine = sqlalchemy.create_engine(url)
+    df = pd.read_sql("select * from gold.tse.profile_partidos", engine)
+    print(df)
+    return df
 
 
 features_map = {
@@ -67,7 +79,7 @@ with col2:
     cargo = st.selectbox(label="Cargo", placeholder="Selecione o cargo para filtro", options=cargos_options)
 
 
-## Definição dos eixeos
+## Definição dos eixos
 col1, col2, = st.columns(2)
 with col1:
     x_option = st.selectbox(label="Eixo x", options=features_options, index=6)
@@ -96,7 +108,7 @@ with col2:
         features_selected = [features_map[i] for i in features_options_selected]
 
 
-data = df[(df['SG_UF']==estado) & (df['DS_CARGO']==cargo)].copy()
+data = df[(df['SG_UF']==estado) & (df['DS_CARGO']==cargo) & (df['SG_PARTIDO']!='GERAL')].copy()
 
 total_candidatos = int(data["totalCandidaturas"].sum())
 st.markdown(f"Total de candidaturas: {total_candidatos}")

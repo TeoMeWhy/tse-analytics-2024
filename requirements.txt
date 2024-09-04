@@ -6,3 +6,5 @@ scikit_learn==1.5.1
 seaborn==0.13.2
 SQLAlchemy==2.0.32
 streamlit==1.37.1
+databricks-sql-connector[sqlalchemy]==3.4.0
+python-dotenv==1.0.1
