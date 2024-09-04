@@ -37,8 +37,10 @@ features_map = {
     "PERCENTUAL RACA PRETA": "txCorRacaPreta",
     "PERCENTUAL RACA PRETA PARDA": "txCorRacaPretaParda",
     "PERCENTUAL RACA NÃO-BRANCA": "txCorRacaNaoBranca",
-    "MEDIA BENS TOTAL": "avgBens",
-    "MEDIA BENS SEM ZEROS": "avgBensNotZero",
+    "MEDIA BENS TOTAL (por mil)": "avgBensPer1000",
+    "MEDIA BENS SEM ZEROS (por mil)": "avgBensNotZeroPer1000",
+    "MEDIANA BENS TOTAL (por mil)": "medianBensPer1000",
+    "MEDIANA BENS SEM ZEROS (por mil)": "medianBensNotZeroPer1000",
     "PERCENTUAL ESTADO CIVIL CASADO(A)": "txEstadoCivilCasado",
     "PERCENTUAL ESTADO CIVIL SOLTEIRO(A)": "txEstadoCivilSolteiro",
     "PERCENTUAL ESTADO CIVIL DIVORCIADO(A)": "txEstadoCivilSeparadoDivorciado",
@@ -47,6 +49,7 @@ features_map = {
 
 features_options = list(features_map.keys())
 features_options.sort()
+
 
 # %%
 
@@ -82,13 +85,13 @@ with col2:
 ## Definição dos eixos
 col1, col2, = st.columns(2)
 with col1:
-    x_option = st.selectbox(label="Eixo x", options=features_options, index=6)
+    x_option = st.selectbox(label="Eixo x", options=features_options, index=features_options.index("PERCENTUAL FEMININO"))
     x = features_map[x_option]
     new_features_options = features_options.copy()
     new_features_options.remove(x_option)
 
 with col2:
-    y_option = st.selectbox(label="Eixo y", options=new_features_options, index=7)
+    y_option = st.selectbox(label="Eixo y", options=new_features_options, index=new_features_options.index("PERCENTUAL RACA PRETA"))
     y = features_map[y_option]
 
 size = st.checkbox("Tamanho das bolhas")
