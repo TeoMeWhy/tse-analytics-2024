@@ -28,8 +28,7 @@ tb_info_completa_cand AS (
 
     SELECT t1.*,
         COALESCE(t2.totalBens, 0) AS totalBens,
-        date('now') - date(ORDER BY SG_PARTIDO, DS_CARGO, SG_UF
-
+        date('now') - date(
             substr(DT_NASCIMENTO, 7, 4) || '-' || 
             substr(DT_NASCIMENTO, 4, 2) || '-' || 
             substr(DT_NASCIMENTO, 1, 2)
