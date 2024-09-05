@@ -1,28 +1,36 @@
 WITH tb_cand AS (
 
     SELECT  DISTINCT
-            SQ_CANDIDATO,
-            SG_UF,
-            DS_CARGO,
-            SG_PARTIDO,
-            NM_PARTIDO,
-            DT_NASCIMENTO,
-            INT(months_between(NOW(), DT_NASCIMENTO) / 12) AS NR_IDADE,
-            DS_GENERO,
-            DS_GRAU_INSTRUCAO,
-            DS_ESTADO_CIVIL,
-            DS_COR_RACA,
-            DS_OCUPACAO
+            t1.idCandidatura,
+            t1.descUF,
+            t1.descCargoCandidatura,
+            t1.descSiglaPartido,
+            t1.descNomePartido,
+            t1.dtNascimentoCandidato,
+            INT(months_between(NOW(), t1.dtNascimentoCandidato) / 12) AS nrIdade,
+            t1.descGeneroCandidato,
+            t1.descGrauInstrucaoCandidato,
+            t1.descEstadoCivilCandidato,
+            t1.descCorRacaCandidato,
+            t1.descOcupacaoCandidato
 
-    FROM bronze.tse.consulta_cand
-    WHERE ANO_ELEICAO = 2024
+    FROM silver.tse.candidaturas AS t1
+
+    LEFT JOIN  silver.tse.eleicoes AS t2
+    ON t1.idEleicao = t2.idEleicao
+    
+    WHERE t2.nrAnoEleicao = 2024
 ),
 
 tb_total_bens AS (
-    SELECT SQ_CANDIDATO,
-           sum(double(replace( VR_BEM_CANDIDATO, ',', '.'))) AS totalBens
-    FROM bronze.tse.bem_candidato
-    WHERE NOT (SQ_CANDIDATO = 160002381679 AND DS_BEM_CANDIDATO = 'VEICULOS')
+    SELECT t1.idCandidatura,
+           sum(double(replace( t1.vlBemCandidato, ',', '.'))) AS totalBens
+    FROM silver.tse.bens_candidatos AS t1
+
+    LEFT JOIN  silver.tse.eleicoes AS t2
+    ON t1.idEleicao = t2.idEleicao
+
+    WHERE NOT (t1.idCandidatura = 160002381679 AND t1.descBemCandidato = 'VEICULOS')
     GROUP BY 1
 ),
 
@@ -33,46 +41,46 @@ tb_info_completa_cand AS (
 
     FROM tb_cand AS t1
     LEFT JOIN tb_total_bens AS t2
-    ON t1.SQ_CANDIDATO = t2.SQ_CANDIDATO
+    ON t1.idCandidatura = t2.idCandidatura
 
 ),
 
 tb_cube AS (
     SELECT
-            SG_PARTIDO,
-            DS_CARGO,
-            SG_UF,
-            AVG(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
-            SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
-            AVG(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) AS txCorRacaPreta,
-            SUM(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) AS totalCorRacaPreta,
-            AVG(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) AS txCorRacaPretaParda,
-            SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) AS totalCorRacaPretaParda,
-            AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) AS txCorRacaNaoBranca,
-            SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) AS totalCorRacaNaoBranca,
+            t1.descSiglaPartido,
+            t1.descCargoCandidatura,
+            t1.descUF,
+            AVG(CASE WHEN t1.descGeneroCandidato = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
+            SUM(CASE WHEN t1.descGeneroCandidato = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
+            AVG(CASE WHEN t1.descCorRacaCandidato = 'PRETA' THEN 1 ELSE 0 END) AS txCorRacaPreta,
+            SUM(CASE WHEN t1.descCorRacaCandidato = 'PRETA' THEN 1 ELSE 0 END) AS totalCorRacaPreta,
+            AVG(CASE WHEN t1.descCorRacaCandidato IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) AS txCorRacaPretaParda,
+            SUM(CASE WHEN t1.descCorRacaCandidato IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) AS totalCorRacaPretaParda,
+            AVG(CASE WHEN t1.descCorRacaCandidato <> 'BRANCA' THEN 1 ELSE 0 END) AS txCorRacaNaoBranca,
+            SUM(CASE WHEN t1.descCorRacaCandidato <> 'BRANCA' THEN 1 ELSE 0 END) AS totalCorRacaNaoBranca,
             SUM(totalBens) AS totalBens,
             AVG(totalBens) AS avgBens,
             COALESCE(AVG(case when totalBens > 1 then totalBens end),0) AS avgBensNotZero,
             MEDIAN(totalBens) AS medianBens,
             COALESCE(MEDIAN(case when totalBens > 1 then totalBens end),0) AS medianBensNotZero,
-            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL='CASADO(A)' THEN 1 ELSE 0 END) / count(*) AS txEstadoCivilCasado,
-            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL='SOLTEIRO(A)' THEN 1 ELSE 0 END) / count(*) AS txEstadoCivilSolteiro,
-            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A))', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / count(*) AS txEstadoCivilSeparadoDivorciado,
-            AVG(NR_IDADE) AS avgIdade,
+            1.0 * SUM(CASE WHEN t1.descEstadoCivilCandidato='CASADO(A)' THEN 1 ELSE 0 END) / count(*) AS txEstadoCivilCasado,
+            1.0 * SUM(CASE WHEN t1.descEstadoCivilCandidato='SOLTEIRO(A)' THEN 1 ELSE 0 END) / count(*) AS txEstadoCivilSolteiro,
+            1.0 * SUM(CASE WHEN t1.descEstadoCivilCandidato IN ('DIVORCIADO(A))', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / count(*) AS txEstadoCivilSeparadoDivorciado,
+            AVG(t1.nrIdade) AS avgIdade,
             count(*) AS totalCandidaturas
 
-    FROM tb_info_completa_cand
+    FROM tb_info_completa_cand AS t1
 
-    GROUP BY SG_PARTIDO, DS_CARGO, SG_UF WITH CUBE
-    ORDER BY SG_PARTIDO, DS_CARGO, SG_UF
+    GROUP BY t1.descSiglaPartido, t1.descCargoCandidatura, t1.descUF WITH CUBE
+    ORDER BY t1.descSiglaPartido, t1.descCargoCandidatura, t1.descUF
 ),
 
 tb_final AS (
 
     SELECT
-        coalesce(SG_PARTIDO, 'GERAL') AS SG_PARTIDO,
-        coalesce(DS_CARGO, 'GERAL') AS DS_CARGO,
-        coalesce(SG_UF, 'BR') AS SG_UF,
+        coalesce(t1.descSiglaPartido, 'GERAL') AS descSiglaPartido,
+        coalesce(t1.descCargoCandidatura, 'GERAL') AS descCargoCandidatura,
+        coalesce(t1.descUF, 'BR') AS descUF,
         txGenFeminino,
         totalGenFeminino,
         txCorRacaPreta,
@@ -97,7 +105,7 @@ tb_final AS (
         avgIdade,
         totalCandidaturas
 
-    FROM tb_cube
+    FROM tb_cube AS t1
 )
 
 SELECT *

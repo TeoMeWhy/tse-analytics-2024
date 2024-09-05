@@ -2,7 +2,8 @@
 # DBTITLE 1,SETUP
 catalog = 'silver'
 database = 'tse'
-table = 'bens_candidatos'
+table = dbutils.widgets.get("table")
+
 tablename = f'{catalog}.{database}.{table}'
 
 with open(f'{table}.sql', 'r') as open_file:
