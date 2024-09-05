@@ -32,8 +32,8 @@ def make_scatter(data, x, y, x_label, y_label, cluster=False, size=False):
     sn.scatterplot(**config)
 
     texts = []
-    for i in data['SG_PARTIDO']:
-        data_tmp = data[data['SG_PARTIDO'] == i]
+    for i in data['descSiglaPartido']:
+        data_tmp = data[data['descSiglaPartido'] == i]
         x_pos = data_tmp[x].values[0]
         y_pos = data_tmp[y].values[0]
         texts.append(plt.text(x_pos, y_pos, i, fontsize=9))

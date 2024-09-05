@@ -63,12 +63,12 @@ Altere as opções abaixo para ver as mudanças no gráfico.
 
 st.markdown(welcome)
 
-uf_options = df["SG_UF"].unique().tolist()
+uf_options = df["descUF"].unique().tolist()
 uf_options.sort()
 uf_options.remove("BR")
 uf_options = ["BR"] + uf_options
 
-cargos_options = df["DS_CARGO"].unique().tolist()
+cargos_options = df["descCargoCandidatura"].unique().tolist()
 cargos_options.sort()
 cargos_options.remove("GERAL")
 cargos_options = ["GERAL"] + cargos_options
@@ -111,7 +111,7 @@ with col2:
         features_selected = [features_map[i] for i in features_options_selected]
 
 
-data = df[(df['SG_UF']==estado) & (df['DS_CARGO']==cargo) & (df['SG_PARTIDO']!='GERAL')].copy()
+data = df[(df['descUF']==estado) & (df['descCargoCandidatura']==cargo) & (df['descSiglaPartido']!='GERAL')].copy()
 
 total_candidatos = int(data["totalCandidaturas"].sum())
 st.markdown(f"Total de candidaturas: {total_candidatos}")
