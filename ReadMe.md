@@ -28,6 +28,6 @@ Conheça mais sobre nosso projeto aqui:
     - [X] Separação por UF/Cargo
     - [ ] Análise mulheres pretas
 
-- [ ] Análise faixa etária
-- [ ] Bens
-- [ ] Candidatos novos/reeleitos
+- [X] Análise faixa etária
+- [X] Bens
+- [] Candidatos novos/reeleitos
