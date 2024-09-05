@@ -30,4 +30,4 @@ Conheça mais sobre nosso projeto aqui:
 
 - [X] Análise faixa etária
 - [X] Bens
-- [] Candidatos novos/reeleitos
+- [ ] Candidatos novos/reeleitos
